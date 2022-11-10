@@ -1,6 +1,6 @@
 def available_cars_for_rental():
     """
-    A function that gets the available cars for rental
+    A function that gets and returns the available cars for rental
     :return:
     """
     cars = []
