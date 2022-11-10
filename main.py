@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 def available_car_for_rental(registration):
@@ -40,8 +40,11 @@ def get_age(birthdate):
     :param birthdate:
     :return:
     """
+    # Get today's date object
     today = date.today()
-    return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    cage = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+    return cage
 
 
 def validate_email(email):
@@ -56,6 +59,42 @@ def validate_email(email):
         print("Valid Email")
     else:
         print("Invalid Email")
+
+
+def check_if_customer_exist(email):
+    """
+    A function that checks if a user exists on the Customer.txt file
+    :param email:
+    :return:
+    """
+    # Read Customer file
+    customer = open('project_files/Customers.txt', 'r')
+
+    # loop and find individual email
+    for user in customer:
+        if user.split(',')[3] == email:
+            return True
+    return False
+
+
+def add_new_customer(customer):
+    """
+    A function that adds a new customer to Customer.txt file
+    :param customer:
+    :return:
+    """
+    customer_file = open("project_files/Customers.txt", "a")
+    customer_file.write(customer)
+    customer_file.close()
+
+
+def add_rental_details(customer):
+    """
+    A function that adds user details to RentedVehicles.txt
+    :param customer:
+    :return:
+    """
+    pass
 
 
 def list_available_cars():
@@ -109,9 +148,42 @@ if __name__ == "__main__":
             if car_is_available:
                 customers_birthday = input("What is your Birthday? (DD/MM/YYYY) : ")
                 if validate_date(customers_birthday):
-                    age = get_age(customers_birthday)
+
+                    # calculate the customers age
+                    age = get_age(datetime.strptime(customers_birthday, '%d/%m/%Y'))
+
+                    # Check if the customer is allowed to rent a car by age
                     if 100 > age >= 18:
-                        pass
+
+                        # Prompt the user for User Details (Firstname, Lastname, Email)
+                        customer_first_name = input("What is your First Name")
+                        customer_last_name = input("What is your Last Name")
+                        customer_email = input("What is your Email Address")
+
+                        # Check if the customer provided a valid email
+                        if validate_email(customer_email) == "Valid Email":
+                            # Check if user exist
+                            if check_if_customer_exist(customer_email):
+                                pass
+                            else:
+                                # Insert Customer Details
+                                customer_details = customers_birthday + "," + customer_first_name + "," + customer_last_name + "," + customer_email
+                                add_new_customer(customer_details)
+                        else:
+                            print("Invalid Email")
+
+                        # Add Details to Rented Vehicles
+                        rental_details = car_registration + "," + customers_birthday + "," + str(datetime.now(tz=None))
+                        add_rental_details(rental_details)
+
+                        print(
+                            '''
+                            Hi {}
+                            You rented the car
+                            '''.format(customer_first_name, car_registration)
+                        )
+                    else:
+                        print("Your Age Limit is not Authorised to Rent")
                 else:
                     print("Invalid Birthday Date")
             else:
