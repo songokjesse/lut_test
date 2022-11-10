@@ -1,9 +1,12 @@
-def available_cars_for_rental():
+from datetime import datetime
+
+
+def available_car_for_rental(registration):
     """
-    A function that gets and returns the available cars for rental
+    A function that gets and returns the availability of a car
     :return:
     """
-    cars = []
+
     # Read the  Vehicle.txt file
     vehicles = open('project_files/Vehicles.txt', 'r')
     # Read the  RentedVehicle.txt file
@@ -11,10 +14,23 @@ def available_cars_for_rental():
     # Loop through both files and find and append cars that have not been rented
     for car in vehicles:
         for rented_car in rented_vehicles:
-            if car.split(',')[0] != rented_car.split(',')[0]:
-                cars.append(car.split(','))
+            if car.split(',')[0] != rented_car.split(',')[0] and car.split(',')[0] == registration:
+                return True
 
-    return cars
+    return False
+
+
+def validate_date(date_input):
+    """
+    A function that validate the date entered by user
+    :param date_input:
+    :return:
+    """
+    try:
+        result = bool(datetime.strptime(date_input, '%d/%m/%Y'))
+    except ValueError:
+        result = False
+    return result
 
 
 def list_available_cars():
@@ -43,7 +59,7 @@ if __name__ == "__main__":
 
     selection_prompt = None
 
-    # always run until user exits loop using 0
+    # always run until user exits using 0
     while selection_prompt != 0:
         selection_prompt = int(input(
             '''
@@ -56,11 +72,23 @@ if __name__ == "__main__":
              What is your selection?: 
             '''))
         if selection_prompt == 1:
+            # get the list of cars that are available for rent
             list_available_cars()
+            # continue running the program
             continue
         elif selection_prompt == 2:
-            print(selection_prompt)
-            print(available_cars_for_rental())
+            # Prompt user to enter car car_registration
+            car_registration = input("Enter Registration Number for the car you want to Rent: ")
+            # Check if car exist for rental
+            car_is_available = available_car_for_rental(car_registration)
+            if car_is_available:
+                customers_birthday = input("What is your Birthday? (DD/MM/YYYY) : ")
+                if validate_date(customers_birthday):
+                    print("valid Birthday Date")
+                else:
+                    print("Invalid Birthday Date")
+            else:
+                print("Car is not Available for Rental")
             continue
         elif selection_prompt == 3:
             print(selection_prompt)
