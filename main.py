@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, date
 
 
@@ -37,6 +38,14 @@ def get_age(birthdate):
     today = date.today()
     return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
 
+
+def validate_email(email):
+    # regex
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    if re.fullmatch(regex, email):
+        print("Valid Email")
+    else:
+        print("Invalid Email")
 
 
 def list_available_cars():
@@ -91,7 +100,8 @@ if __name__ == "__main__":
                 customers_birthday = input("What is your Birthday? (DD/MM/YYYY) : ")
                 if validate_date(customers_birthday):
                     age = get_age(customers_birthday)
-                    # if age < 100 and age >=18
+                    if 100 > age >= 18:
+                        pass
                 else:
                     print("Invalid Birthday Date")
             else:
