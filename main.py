@@ -1,13 +1,18 @@
 def list_available_cars():
+    # variable declaration
+    available_vehicles_list = []
     # Read the Vehicle.txt file
     vehicles = open('project_files/Vehicles.txt', 'r')
-    print('---------------------------------------------------------------------------')
-    print("Available Cars")
-    print('---------------------------------------------------------------------------')
+    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
 
-    # loop through the rows
+    # loop through the rows and check if the car is not already rented
+    print('---------------------------------------------------------------------------')
+    print("Available Cars for Rental")
+    print('---------------------------------------------------------------------------')
     for car in vehicles:
-        print(car)
+        for rented_car in rented_vehicles:
+            if car.split(',')[0] != rented_car.split(',')[0]:
+                print(car)
     print('---------------------------------------------------------------------------')
 
 
