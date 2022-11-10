@@ -1,19 +1,39 @@
+def available_cars_for_rental():
+    """
+    A function that gets the available cars for rental
+    :return:
+    """
+    cars = []
+    # Read the  Vehicle.txt file
+    vehicles = open('project_files/Vehicles.txt', 'r')
+    # Read the  RentedVehicle.txt file
+    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
+    # Loop through both files and find and append cars that have not been rented
+    for car in vehicles:
+        for rented_car in rented_vehicles:
+            if car.split(',')[0] != rented_car.split(',')[0]:
+                cars.append(car.split(','))
+
+    return cars
+
+
 def list_available_cars():
-    # variable declaration
-    available_vehicles_list = []
     # Read the Vehicle.txt file
     vehicles = open('project_files/Vehicles.txt', 'r')
     rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
 
     # loop through the rows and check if the car is not already rented
-    print('---------------------------------------------------------------------------')
-    print("Available Cars for Rental")
-    print('---------------------------------------------------------------------------')
+
+    print("The following cars are available:")
     for car in vehicles:
         for rented_car in rented_vehicles:
             if car.split(',')[0] != rented_car.split(',')[0]:
-                print(car)
-    print('---------------------------------------------------------------------------')
+                Reg = car.split(',')[0]
+                Model = car.split(',')[1]
+                Price = car.split(',')[2]
+                Properties = car.split(',')[3]
+                print(
+                    "Reg. nr: {} , Model: {}, Price per day: {}, Properties: {}".format(Reg, Model, Price, Properties))
 
 
 if __name__ == "__main__":
@@ -37,6 +57,7 @@ if __name__ == "__main__":
             continue
         elif selection_prompt == 2:
             print(selection_prompt)
+            print(available_cars_for_rental())
             continue
         elif selection_prompt == 3:
             print(selection_prompt)
