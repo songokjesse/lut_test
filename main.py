@@ -18,12 +18,15 @@ def available_cars_for_rental():
 
 
 def list_available_cars():
+    """
+    A function that prints to screen a list of cars that are available for renting
+    :return:
+    """
     # Read the Vehicle.txt file
     vehicles = open('project_files/Vehicles.txt', 'r')
     rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
 
-    # loop through the rows and check if the car is not already rented
-
+    # loop through the rows and check if the car is not already rented and print on screen
     print("The following cars are available:")
     for car in vehicles:
         for rented_car in rented_vehicles:
