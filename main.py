@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 
 def available_car_for_rental(registration):
@@ -31,6 +31,12 @@ def validate_date(date_input):
     except ValueError:
         result = False
     return result
+
+
+def get_age(birthdate):
+    today = date.today()
+    return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
 
 
 def list_available_cars():
@@ -84,7 +90,8 @@ if __name__ == "__main__":
             if car_is_available:
                 customers_birthday = input("What is your Birthday? (DD/MM/YYYY) : ")
                 if validate_date(customers_birthday):
-                    print("valid Birthday Date")
+                    age = get_age(customers_birthday)
+                    # if age < 100 and age >=18
                 else:
                     print("Invalid Birthday Date")
             else:
