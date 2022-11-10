@@ -35,11 +35,21 @@ def validate_date(date_input):
 
 
 def get_age(birthdate):
+    """
+    A function that calculates the Age from Birthday Provided by User
+    :param birthdate:
+    :return:
+    """
     today = date.today()
     return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
 
 
 def validate_email(email):
+    """
+    A function that validate email addresses entered by the user
+    :param email:
+    :return:
+    """
     # regex
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     if re.fullmatch(regex, email):
