@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 from collections import Counter
 
 
@@ -50,9 +50,8 @@ def validate_email(email):
     # regex
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     if re.fullmatch(regex, email):
-        print("Valid Email")
-    else:
-        print("Invalid Email")
+        return True
+    return False
 
 
 def check_if_customer_exist(email):
@@ -163,7 +162,7 @@ if __name__ == "__main__":
             # continue running the program
             continue
         elif selection_prompt == 2:
-            # Prompt user to enter car car_registration
+            # Prompt user to enter car registration
             car_registration = input("Enter Registration Number for the car you want to Rent: ")
             # Check if car exist for rental
             car_is_available = available_car_for_rental(car_registration)
@@ -178,14 +177,15 @@ if __name__ == "__main__":
                     if 100 > age >= 18:
 
                         # Prompt the user for User Details (Firstname, Lastname, Email)
-                        customer_first_name = input("What is your First Name")
-                        customer_last_name = input("What is your Last Name")
-                        customer_email = input("What is your Email Address")
+                        customer_first_name = input("What is your First Name: ")
+                        customer_last_name = input("What is your Last Name: ")
+                        customer_email = input("What is your Email Address: ")
 
                         # Check if the customer provided a valid email
-                        if validate_email(customer_email) == "Valid Email":
+                        if validate_email(customer_email):
                             # Check if user exist
                             if check_if_customer_exist(customer_email):
+                                # if it exists do nothing
                                 pass
                             else:
                                 # Insert Customer Details
@@ -198,18 +198,14 @@ if __name__ == "__main__":
                         rental_details = car_registration + "," + customers_birthday + "," + str(datetime.now(tz=None))
                         add_rental_details(rental_details)
 
-                        print(
-                            '''
-                            Hi {}
-                            You rented the car
-                            '''.format(customer_first_name, car_registration)
-                        )
+                        print("Hi {} You rented the car {}".format(customer_first_name, car_registration))
+
                     else:
                         print("Your Age Limit is not Authorised to Rent")
                 else:
                     print("Invalid Birthday Date")
             else:
-                print("Car is not Available for Rental")
+                print("Invalid Registration or Car is not Available for Rental")
             continue
         elif selection_prompt == 3:
             print(selection_prompt)
