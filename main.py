@@ -99,14 +99,8 @@ def get_difference_in_list():
     """
 
     # Declare emtpy arrays/lists
-    cars = []
+    cars = get_car_registration_list()
     rented_cars = get_rented_vehicle()
-    # Read the Vehicle.txt file
-    vehicles = open('project_files/Vehicles.txt', 'r')
-
-    # loop through the rows and append to the list declared above
-    for car in vehicles:
-        cars.append(car.split(',')[0])
 
     # get the difference between the cars using the Counter library
     c1 = Counter(cars)
@@ -154,6 +148,17 @@ def get_rented_vehicle():
     return rented_cars
 
 
+def get_car_registration_list():
+    cars = []
+    # Read the Vehicle.txt file
+    vehicles = open('project_files/Vehicles.txt', 'r')
+
+    # loop through the rows and append to the list declared above
+    for car in vehicles:
+        cars.append(car.split(',')[0])
+    return cars
+
+
 def check_for_rented_car(registration):
     """
     A function that checks if a car has already been rented
@@ -164,6 +169,27 @@ def check_for_rented_car(registration):
     if registration in rented_cars:
         return True
     return False
+
+
+def calculate_rent_amount(registration):
+    # get rental date and price per day
+    # Read the Vehicle.txt file
+    global start_date
+    datetime_now = datetime.now()
+    date_format = "%m/%d/%Y %H:%M"
+    price = 0
+    vehicles = open('project_files/Vehicles.txt', 'r')
+    rentedVehicle = open('project_files/rentedVehicles.txt', 'r')
+
+    # loop through the rows and append to the list declared above
+    for car in vehicles:
+        if registration in car:
+            price = car.split(',')[2]
+    for rent_car in rentedVehicle:
+        if registration in rent_car:
+            start_date = rent_car.split(',')[2]
+
+    print(price)
 
 
 if __name__ == "__main__":
@@ -236,9 +262,10 @@ if __name__ == "__main__":
             continue
         elif selection_prompt == 3:
             # Prompt user to enter car registration
-            car_registration = input("Enter Registration Number for the Rented Car: ")
-            if check_for_rented_car(car_registration):
-                pass
+            rented_car_registration = input("Enter Registration Number for the Rented Car: ")
+            if check_for_rented_car(rented_car_registration):
+                amount = calculate_rent_amount(rented_car_registration)
+                print(amount)
             else:
                 print("Car has not been rented Out")
             continue
