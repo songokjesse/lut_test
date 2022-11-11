@@ -87,7 +87,9 @@ def add_rental_details(customer):
     :param customer:
     :return:
     """
-    pass
+    f = open("project_files/rentedVehicles.txt", "a")
+    f.write(customer)
+    f.close()
 
 
 def get_difference_in_list():
@@ -193,9 +195,9 @@ if __name__ == "__main__":
                                 add_new_customer(customer_details)
                         else:
                             print("Invalid Email")
-
+                        now = datetime.now()  # current date and time
                         # Add Details to Rented Vehicles
-                        rental_details = car_registration + "," + customers_birthday + "," + str(datetime.now(tz=None))
+                        rental_details = car_registration + "," + customers_birthday + "," + now.strftime("%m/%d/%Y %H:%M")
                         add_rental_details(rental_details)
 
                         print("Hi {} You rented the car {}".format(customer_first_name, car_registration))
