@@ -100,16 +100,13 @@ def get_difference_in_list():
 
     # Declare emtpy arrays/lists
     cars = []
-    rented_cars = []
+    rented_cars = get_rented_vehicle()
     # Read the Vehicle.txt file
     vehicles = open('project_files/Vehicles.txt', 'r')
-    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
 
     # loop through the rows and append to the list declared above
     for car in vehicles:
         cars.append(car.split(',')[0])
-    for rented_car in rented_vehicles:
-        rented_cars.append(rented_car.split(',')[0])
 
     # get the difference between the cars using the Counter library
     c1 = Counter(cars)
@@ -131,6 +128,7 @@ def list_available_cars():
     # loop through the vehicles file and
     # compare to the reg numbers of cars available for rent to create
     # the final print statement
+    print("The following cars are available: ")
     for car in vehicles:
         for reg in reg_cars_available:
             if reg in car:
@@ -138,8 +136,34 @@ def list_available_cars():
                 Model = car.split(',')[1]
                 Price = car.split(',')[2]
                 Properties = car.split(',')[3]
+
                 print(
                     "Reg. nr: {} , Model: {}, Price per day: {}, Properties: {}".format(Reg, Model, Price, Properties))
+
+
+def get_rented_vehicle():
+    """
+    A function that returns the registration numbers of cars that have been rented
+    :return:
+    """
+    rented_cars = []
+    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
+    for rented_car in rented_vehicles:
+        rented_cars.append(rented_car.split(',')[0])
+
+    return rented_cars
+
+
+def check_for_rented_car(registration):
+    """
+    A function that checks if a car has already been rented
+    :param registration:
+    :return:
+    """
+    rented_cars = get_rented_vehicle()
+    if registration in rented_cars:
+        return True
+    return False
 
 
 if __name__ == "__main__":
@@ -197,7 +221,8 @@ if __name__ == "__main__":
                             print("Invalid Email")
                         now = datetime.now()  # current date and time
                         # Add Details to Rented Vehicles
-                        rental_details = car_registration + "," + customers_birthday + "," + now.strftime("%m/%d/%Y %H:%M")
+                        rental_details = car_registration + "," + customers_birthday + "," + now.strftime(
+                            "%m/%d/%Y %H:%M")
                         add_rental_details(rental_details)
 
                         print("Hi {} You rented the car {}".format(customer_first_name, car_registration))
@@ -210,7 +235,12 @@ if __name__ == "__main__":
                 print("Invalid Registration or Car is not Available for Rental")
             continue
         elif selection_prompt == 3:
-            print(selection_prompt)
+            # Prompt user to enter car registration
+            car_registration = input("Enter Registration Number for the Rented Car: ")
+            if check_for_rented_car(car_registration):
+                pass
+            else:
+                print("Car has not been rented Out")
             continue
         elif selection_prompt == 4:
             print(selection_prompt)
