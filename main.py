@@ -1,5 +1,6 @@
 import re
 from datetime import datetime, date, timedelta
+from collections import Counter
 
 
 def available_car_for_rental(registration):
@@ -7,16 +8,9 @@ def available_car_for_rental(registration):
     A function that gets and returns the availability of a car
     :return:
     """
-
-    # Read the  Vehicle.txt file
-    vehicles = open('project_files/Vehicles.txt', 'r')
-    # Read the  RentedVehicle.txt file
-    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
-    # Loop through both files and find and append cars that have not been rented
-    for car in vehicles:
-        for rented_car in rented_vehicles:
-            if car.split(',')[0] != rented_car.split(',')[0] and car.split(',')[0] == registration:
-                return True
+    available_car_registration = get_difference_in_list()
+    if registration in available_car_registration:
+        return True
 
     return False
 
@@ -97,20 +91,48 @@ def add_rental_details(customer):
     pass
 
 
+def get_difference_in_list():
+    """
+    A function that reads two files and find the differences
+    :return:
+    """
+
+    # Declare emtpy arrays/lists
+    cars = []
+    rented_cars = []
+    # Read the Vehicle.txt file
+    vehicles = open('project_files/Vehicles.txt', 'r')
+    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
+
+    # loop through the rows and append to the list declared above
+    for car in vehicles:
+        cars.append(car.split(',')[0])
+    for rented_car in rented_vehicles:
+        rented_cars.append(rented_car.split(',')[0])
+
+    # get the difference between the cars using the Counter library
+    c1 = Counter(cars)
+    c2 = Counter(rented_cars)
+    diff = list((c1 - c2).elements())
+    return diff
+
+
 def list_available_cars():
     """
     A function that prints to screen a list of cars that are available for renting
     :return:
     """
-    # Read the Vehicle.txt file
+    # read the vehicles file
     vehicles = open('project_files/Vehicles.txt', 'r')
-    rented_vehicles = open('project_files/rentedVehicles.txt', 'r')
+    # get the list of available cars reg numbers
+    reg_cars_available = get_difference_in_list()
 
-    # loop through the rows and check if the car is not already rented and print on screen
-    print("The following cars are available:")
+    # loop through the vehicles file and
+    # compare to the reg numbers of cars available for rent to create
+    # the final print statement
     for car in vehicles:
-        for rented_car in rented_vehicles:
-            if car.split(',')[0] != rented_car.split(',')[0]:
+        for reg in reg_cars_available:
+            if reg in car:
                 Reg = car.split(',')[0]
                 Model = car.split(',')[1]
                 Price = car.split(',')[2]
