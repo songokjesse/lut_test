@@ -271,6 +271,7 @@ if __name__ == "__main__":
             if check_for_rented_car(rented_car_registration):
                 amount = calculate_rent_amount(rented_car_registration)
                 print(amount)
+                
             else:
                 print("Car has not been rented Out")
             continue
