@@ -175,8 +175,7 @@ def calculate_rent_amount(registration):
     # get rental date and price per day
     # Read the Vehicle.txt file
     global start_date
-    datetime_now = datetime.now()
-    date_format = "%m/%d/%Y %H:%M"
+    date_today = datetime.today()
     price = 0
     vehicles = open('project_files/Vehicles.txt', 'r')
     rentedVehicle = open('project_files/rentedVehicles.txt', 'r')
@@ -189,8 +188,14 @@ def calculate_rent_amount(registration):
         if registration in rent_car:
             start_date = rent_car.split(',')[2]
 
-    print(price)
-
+    # Get the days from date
+    dateToday = date_today.date()
+    rental_start_date = datetime.strptime(start_date.strip(), "%d/%m/%Y %H:%M").date()
+    rental_days = (dateToday - rental_start_date).days
+    print(rental_days)
+    # calculate the amount
+    rental_amount = int(rental_days) * int(price)
+    return  rental_amount
 
 if __name__ == "__main__":
 
@@ -248,7 +253,7 @@ if __name__ == "__main__":
                         now = datetime.now()  # current date and time
                         # Add Details to Rented Vehicles
                         rental_details = car_registration + "," + customers_birthday + "," + now.strftime(
-                            "%m/%d/%Y %H:%M")
+                            "%d/%m/%Y %H:%M")
                         add_rental_details(rental_details)
 
                         print("Hi {} You rented the car {}".format(customer_first_name, car_registration))
