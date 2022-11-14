@@ -195,7 +195,8 @@ def calculate_rent_amount(registration):
     print(rental_days)
     # calculate the amount
     rental_amount = int(rental_days) * int(price)
-    return  rental_amount
+    return [rental_days, rental_amount]
+
 
 if __name__ == "__main__":
 
@@ -271,7 +272,7 @@ if __name__ == "__main__":
             if check_for_rented_car(rented_car_registration):
                 amount = calculate_rent_amount(rented_car_registration)
                 print(amount)
-                
+
             else:
                 print("Car has not been rented Out")
             continue
