@@ -192,10 +192,32 @@ def calculate_rent_amount(registration):
     dateToday = date_today.date()
     rental_start_date = datetime.strptime(start_date.strip(), "%d/%m/%Y %H:%M").date()
     rental_days = (dateToday - rental_start_date).days
-    print(rental_days)
     # calculate the amount
     rental_amount = int(rental_days) * int(price)
-    return [rental_days, rental_amount]
+    return [rental_days, float(rental_amount)]
+
+
+def remove_transaction_from_line(registration):
+    """
+    A function that deletes a line with a specific registration number
+    :param registration:
+    :return:
+    """
+    with open("project_files/rentedVehicles.txt", "r") as file_input:
+        with open("project_files/rentedVehicles.txt", "w") as file_output:
+            # iterate all lines from file
+            for line in file_input:
+                # if substring contain in a line then don't write it
+                if registration not in line.strip(","):
+                    file_output.write(line)
+
+
+def write_to_transaction_file(rent_amount, registration):
+    pass
+
+
+def calculate_total_transactions():
+    pass
 
 
 if __name__ == "__main__":
@@ -270,8 +292,14 @@ if __name__ == "__main__":
             # Prompt user to enter car registration
             rented_car_registration = input("Enter Registration Number for the Rented Car: ")
             if check_for_rented_car(rented_car_registration):
+                # calculate the rental days & amount and return their values in an array
                 amount = calculate_rent_amount(rented_car_registration)
-                print(amount)
+                # Add the rental details to the transaction file
+                write_to_transaction_file(amount, rented_car_registration)
+                # remove the rental details after car has been returned
+                remove_transaction_from_line(rented_car_registration)
+                # display message
+                print("The rent lasted {} days and the cost is {} euros".format(amount[0], format(amount[1], ".2f")))
 
             else:
                 print("Car has not been rented Out")
