@@ -87,8 +87,9 @@ def add_rental_details(customer):
     :param customer:
     :return:
     """
+    details = customer + "\n"
     f = open("project_files/rentedVehicles.txt", "a")
-    f.write(customer)
+    f.write(details)
     f.close()
 
 
@@ -177,6 +178,7 @@ def calculate_rent_amount(registration):
     global start_date
     date_today = datetime.today()
     price = 0
+    birthday = ""
     vehicles = open('project_files/Vehicles.txt', 'r')
     rentedVehicle = open('project_files/rentedVehicles.txt', 'r')
 
@@ -187,14 +189,15 @@ def calculate_rent_amount(registration):
     for rent_car in rentedVehicle:
         if registration in rent_car:
             start_date = rent_car.split(',')[2]
-
+            birthday = rent_car.split(',')[1]
     # Get the days from date
-    dateToday = date_today.date()
+    rent_stop_date = date_today.date()
+    stop_date = datetime.now()
     rental_start_date = datetime.strptime(start_date.strip(), "%d/%m/%Y %H:%M").date()
-    rental_days = (dateToday - rental_start_date).days
+    rental_days = (rent_stop_date - rental_start_date).days
     # calculate the amount
     rental_amount = int(rental_days) * int(price)
-    return [rental_days, float(rental_amount)]
+    return [rental_days, float(rental_amount), start_date.strip(), stop_date.strftime("%d/%m/%Y %H:%M"), birthday]
 
 
 def remove_transaction_from_line(registration):
@@ -203,21 +206,35 @@ def remove_transaction_from_line(registration):
     :param registration:
     :return:
     """
-    with open("project_files/rentedVehicles.txt", "r") as file_input:
-        with open("project_files/rentedVehicles.txt", "w") as file_output:
-            # iterate all lines from file
-            for line in file_input:
-                # if substring contain in a line then don't write it
-                if registration not in line.strip(","):
-                    file_output.write(line)
+    with open("project_files/rentedVehicles.txt", 'r') as file:
+        lines = file.readlines()
+
+    # delete matching content
+    with open("project_files/rentedVehicles.txt", 'w') as file:
+        for line in lines:
+            # find() returns -1 if no match is found
+            if line.find(registration) != -1:
+                pass
+            else:
+                file.write(line)
 
 
 def write_to_transaction_file(rent_amount, registration):
-    pass
+    f = open("project_files/transActions.txt", "a")
+    # stop_date =
+    details = registration + "," + str(rent_amount[4]) + "," + str(rent_amount[2]) + "," + str(
+        rent_amount[3]) + "," + str(rent_amount[0]) + "," + format(amount[1], ".2f") + "\n"
+    f.write(details)
+    f.close()
 
 
 def calculate_total_transactions():
-    pass
+    total_rental_amount = 0
+    transactions = open('project_files/transActions.txt', 'r')
+    for cost in transactions:
+        total_rental_amount = total_rental_amount + float(cost.split(',')[5])
+
+    return total_rental_amount
 
 
 if __name__ == "__main__":
@@ -305,7 +322,8 @@ if __name__ == "__main__":
                 print("Car has not been rented Out")
             continue
         elif selection_prompt == 4:
-            print(selection_prompt)
+            total_amount = calculate_total_transactions()
+            print("The total amount of money is {} euros".format(total_amount))
             continue
         elif selection_prompt == 0:
             break
